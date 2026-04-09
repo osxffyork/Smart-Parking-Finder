@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CampusPark | Smart Parking Finder</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top main-navbar">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
+        <span class="logo-box"><span>P</span></span>
+        <span class="brand-word">CampusPark</span>
+      </a>
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#map">Map</a></li>
+          <li class="nav-item"><a class="nav-link" href="#reserve">Reserve</a></li>
+          <li class="nav-item"><a class="nav-link" href="#directory">Directory</a></li>
+          <li class="nav-item"><a class="nav-link" href="#permits">Permits</a></li>
+          <li class="nav-item"><a class="nav-link" href="#dashboard">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="#notifications">Notifications</a></li>
+          <li class="nav-item"><a class="nav-link" href="#help">Help</a></li>
+          <li class="nav-item me-lg-2">
+            <a class="nav-link bell-link position-relative" href="#notifications" aria-label="Notifications">
+              <i class="bi bi-bell-fill"></i>
+              <span class="notification-badge" id="navUnreadCount">0</span>
+            </a>
+          </li>
+          <li class="nav-item"><a class="btn btn-campus-pill" href="#auth">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section id="home" class="app-page section-block hero-section">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-7">
+            <span class="section-kicker">SMART CAMPUS PARKING</span>
+            <h1 class="hero-title">Find Your Spot in Seconds</h1>
+            <p class="hero-text">Smart Parking Finder helps students, staff, and visitors compare live lot availability, rules, prices, directions, and reservation options before entering a busy campus zone.</p>
+            <div class="d-flex flex-wrap gap-3 mt-4">
+              <a href="#reserve" class="btn btn-campus-lg">Find Parking Now</a>
+              <a href="#map" class="btn btn-campus-outline">View Live Map</a>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="summary-panel">
+              <div class="summary-top">LIVE SUMMARY</div>
+              <div class="summary-number" id="heroAvailableCount">0</div>
+              <div class="summary-label">Total Available Spots Across Campus</div>
+              <div class="summary-grid mt-4">
+                <div>
+                  <small>Total Lots</small>
+                  <strong id="heroLotCount">0</strong>
+                </div>
+                <div>
+                  <small>Accessible Spots</small>
+                  <strong id="heroAccessibleCount">0</strong>
+                </div>
+                <div>
+                  <small>EV Stations</small>
+                  <strong id="heroEvCount">0</strong>
+                </div>
+                <div>
+                  <small>Open Lots</small>
+                  <strong id="heroOpenCount">0</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-panel mt-5">
+          <div class="row g-3 align-items-end">
+            <div class="col-lg-8">
+              <label class="form-label text-uppercase">Quick Search by Building or Destination</label>
+              <input id="quickSearchInput" type="text" class="form-control campus-input" placeholder="Try: Library, Engineering Building, Student Centre" />
+            </div>
+            <div class="col-lg-4 d-grid">
+              <button id="quickSearchBtn" class="btn btn-campus-lg">Search Nearest Lots</button>
+            </div>
+          </div>
+          <div id="quickSearchResults" class="row g-3 mt-1"></div>
+        </div>
+
+        <div class="mt-5">
+          <div class="section-title-box">HOW IT WORKS</div>
+          <div class="row g-4 mt-2">
+            <div class="col-md-4">
+              <div class="step-card">
+                <div class="step-icon"><i class="bi bi-search"></i></div>
+                <h3>Search</h3>
+                <p>Find lots near your building, compare price, permit rules, accessibility, and EV charging.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="step-card">
+                <div class="step-icon"><i class="bi bi-pin-map"></i></div>
+                <h3>Select</h3>
+                <p>Open a lot card or map modal to review capacity, live status, hours, and restrictions.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="step-card">
+                <div class="step-icon"><i class="bi bi-p-square"></i></div>
+                <h3>Park</h3>
+                <p>Reserve ahead, get directions, show your QR confirmation, and head straight to your lot.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <div class="section-title-box">FEATURE HIGHLIGHTS</div>
+          <div class="row g-4 mt-2">
+            <div class="col-md-6 col-xl-3"><div class="feature-card"><i class="bi bi-broadcast"></i><h3>Real-Time Updates</h3><p>Live campus lot status with graceful fallback when data is delayed.</p></div></div>
+            <div class="col-md-6 col-xl-3"><div class="feature-card"><i class="bi bi-calendar-check"></i><h3>Reserve Ahead</h3><p>Reserve by date, start time, and duration with a generated booking reference.</p></div></div>
+            <div class="col-md-6 col-xl-3"><div class="feature-card"><i class="bi bi-phone"></i><h3>Mobile Friendly</h3><p>Responsive single-page interface built for quick decisions on smaller screens.</p></div></div>
+            <div class="col-md-6 col-xl-3"><div class="feature-card"><i class="bi bi-universal-access-circle"></i><h3>Accessible Spots</h3><p>Track accessible-only lots and EV charging stations from search, directory, and map.</p></div></div>
+          </div>
+        </div>
+
+        <div class="stats-strip mt-5">
+          <div class="row g-3 text-center">
+            <div class="col-md-4"><div class="stat-box"><small>Spots Filled Today</small><strong id="filledToday">0</strong></div></div>
+            <div class="col-md-4"><div class="stat-box"><small>Average Occupancy</small><strong id="avgOccupancy">0%</strong></div></div>
+            <div class="col-md-4"><div class="stat-box"><small>Peak Hour</small><strong id="peakHour">--</strong></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="map" class="app-page section-block soft-section">
+      <div class="container">
+        <div class="section-title-box">LIVE PARKING MAP</div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-3">
+            <div class="panel-card sticky-panel">
+              <h3 class="panel-heading">Map Filters</h3>
+              <div class="mb-3">
+                <label class="form-label">Lot Type</label>
+                <select id="mapLotTypeFilter" class="form-select campus-input">
+                  <option value="all">All</option>
+                  <option value="student">Student</option>
+                  <option value="staff">Staff</option>
+                  <option value="visitor">Visitor</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Permit Type</label>
+                <select id="mapPermitFilter" class="form-select campus-input">
+                  <option value="all">All</option>
+                  <option value="student">Student</option>
+                  <option value="staff">Staff</option>
+                  <option value="visitor">Visitor</option>
+                  <option value="accessible">Accessible</option>
+                  <option value="motorcycle">Motorcycle</option>
+                </select>
+              </div>
+              <div class="form-check form-switch campus-switch">
+                <input class="form-check-input" type="checkbox" id="mapAccessibleOnly">
+                <label class="form-check-label" for="mapAccessibleOnly">Accessible Only</label>
+              </div>
+              <div class="form-check form-switch campus-switch mt-2">
+                <input class="form-check-input" type="checkbox" id="mapEvOnly">
+                <label class="form-check-label" for="mapEvOnly">EV Charging</label>
+              </div>
+              <hr>
+              <h4 class="legend-title">Legend</h4>
+              <div class="legend-item"><span class="legend-swatch swatch-available"></span> Available</div>
+              <div class="legend-item"><span class="legend-swatch swatch-limited"></span> Limited</div>
+              <div class="legend-item"><span class="legend-swatch swatch-full"></span> Full</div>
+              <div class="legend-item"><span class="legend-swatch swatch-reserved"></span> Reserved / Accessible</div>
+              <div class="last-updated mt-3">Last updated: <span id="mapUpdatedAt">--</span></div>
+            </div>
+          </div>
+          <div class="col-lg-9">
+            <div class="panel-card map-panel-card">
+              <div class="map-topbar d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                <div>
+                  <h3 class="panel-heading mb-1">Interactive Campus Map</h3>
+                  <p class="mb-0 small-text">Your location appears as a blue circle. Click any parking lot marker to draw directions and see the estimated travel time.</p>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                  <button id="locateMeBtn" class="btn btn-campus-outline btn-sm" type="button">Use My Location</button>
+                  <button id="clearRouteBtn" class="btn btn-campus-lg btn-sm" type="button">Clear Route</button>
+                </div>
+              </div>
+              <div class="campus-map-shell">
+                <div class="campus-map-canvas" id="campusMapCanvas">
+                  <svg id="campusMapSvg" viewBox="0 0 1000 620" role="img" aria-label="Campus parking map with live lots and routing">
+                    <defs>
+                      <pattern id="roadDash" patternUnits="userSpaceOnUse" width="14" height="14">
+                        <rect width="14" height="14" fill="transparent"></rect>
+                      </pattern>
+                    </defs>
+                    <rect x="0" y="0" width="1000" height="620" class="map-bg"></rect>
+                    <rect x="45" y="70" width="910" height="470" rx="28" class="map-greenbelt"></rect>
+                    <path d="M120 125 H885" class="map-road main-road"></path>
+                    <path d="M100 320 H900" class="map-road main-road"></path>
+                    <path d="M180 520 H840" class="map-road secondary-road"></path>
+                    <path d="M210 110 V530" class="map-road secondary-road"></path>
+                    <path d="M505 95 V545" class="map-road secondary-road"></path>
+                    <path d="M780 110 V525" class="map-road secondary-road"></path>
+
+                    <g class="map-building">
+                      <rect x="258" y="154" width="155" height="95" rx="10"></rect>
+                      <text x="335.5" y="208">Scott Library</text>
+                    </g>
+                    <g class="map-building">
+                      <rect x="565" y="160" width="165" height="100" rx="10"></rect>
+                      <text x="647.5" y="214">Student Centre</text>
+                    </g>
+                    <g class="map-building">
+                      <rect x="260" y="362" width="165" height="96" rx="10"></rect>
+                      <text x="342.5" y="416">Engineering</text>
+                    </g>
+                    <g class="map-building">
+                      <rect x="566" y="364" width="172" height="96" rx="10"></rect>
+                      <text x="652" y="418">Tait McKenzie</text>
+                    </g>
+                    <g class="map-building small">
+                      <rect x="82" y="220" width="95" height="70" rx="10"></rect>
+                      <text x="129.5" y="262">Founders</text>
+                    </g>
+                    <g class="map-building small">
+                      <rect x="812" y="234" width="108" height="72" rx="10"></rect>
+                      <text x="866" y="276">Schulich</text>
+                    </g>
+
+                    <polyline id="routeLine" class="route-line d-none" points=""></polyline>
+                    <g id="routeDots"></g>
+                    <g id="mapMarkersLayer"></g>
+                    <g id="userLocationLayer"></g>
+                  </svg>
+                </div>
+                <div class="route-info-card" id="routeInfoCard">
+                  <div class="route-info-empty">Select a lot on the map to draw a dotted route from your current location.</div>
+                </div>
+              </div>
+              <div class="map-lot-results mt-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                  <h3 class="panel-heading mb-0">Filtered Lots</h3>
+                  <span class="small-text">Lot cards now stay under the map so the map area stays stable.</span>
+                </div>
+                <div class="row g-3" id="mapGrid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reserve" class="app-page section-block">
+      <div class="container">
+        <div class="section-title-box">SPOT RESERVATION</div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-5">
+            <div class="panel-card h-100">
+              <h3 class="panel-heading">Search Available Lots</h3>
+              <form id="reservationSearchForm" novalidate>
+                <div class="mb-3">
+                  <label class="form-label">Destination Building</label>
+                  <select id="reserveDestination" class="form-select campus-input" required>
+                    <option value="">Select destination</option>
+                    <option>Scott Library</option>
+                    <option>Engineering Building</option>
+                    <option>Student Centre</option>
+                    <option>Founders College</option>
+                    <option>Tait McKenzie Centre</option>
+                    <option>Schulich School of Business</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Date</label>
+                  <input id="reserveDate" type="date" class="form-control campus-input" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Start Time</label>
+                  <input id="reserveTime" type="time" class="form-control campus-input" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Duration</label>
+                  <select id="reserveDuration" class="form-select campus-input" required>
+                    <option value="">Select duration</option>
+                    <option>1hr</option>
+                    <option>2hr</option>
+                    <option>4hr</option>
+                    <option>All Day</option>
+                  </select>
+                </div>
+                <button class="btn btn-campus-lg w-100" type="submit">Search Parking Options</button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="panel-card">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <h3 class="panel-heading mb-0">Available Results</h3>
+                <span class="small-text">Sorted by nearest distance</span>
+              </div>
+              <div id="reservationResults" class="row g-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4 mt-2">
+          <div class="col-lg-6">
+            <div class="panel-card">
+              <h3 class="panel-heading">Reservation Form</h3>
+              <form id="confirmReservationForm" novalidate>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input id="resFullName" class="form-control campus-input" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Student / Staff ID</label>
+                    <input id="resUserId" class="form-control campus-input" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Vehicle Plate</label>
+                    <input id="resPlate" class="form-control campus-input" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Permit Type</label>
+                    <select id="resPermitType" class="form-select campus-input" required>
+                      <option value="">Select permit</option>
+                      <option>Student</option>
+                      <option>Staff</option>
+                      <option>Visitor</option>
+                      <option>Accessible</option>
+                      <option>Motorcycle</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mt-4 d-grid gap-2 d-md-flex">
+                  <button class="btn btn-campus-lg flex-fill" type="submit">Confirm Reservation</button>
+                  <button class="btn btn-campus-outline flex-fill" type="button" id="clearReservationSelection">Clear Selection</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="panel-card h-100">
+              <h3 class="panel-heading">Live Reservation Summary</h3>
+              <div id="reservationSummary" class="summary-stack"></div>
+              <div id="reservationSuccess" class="success-box d-none mt-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard" class="app-page section-block soft-section">
+      <div class="container">
+        <div class="section-title-box">MY DASHBOARD</div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-5">
+            <div class="panel-card h-100">
+              <h3 class="panel-heading">Active Reservation</h3>
+              <div id="activeReservationCard"></div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="panel-card">
+              <h3 class="panel-heading">Upcoming Reservations</h3>
+              <div id="upcomingReservations"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-8">
+            <div class="panel-card">
+              <h3 class="panel-heading">Past Reservation History</h3>
+              <div class="table-responsive">
+                <table class="table campus-table" id="pastReservationsTable">
+                  <thead><tr><th>Date</th><th>Lot</th><th>Spot</th><th>Duration</th><th>Status</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="panel-card mb-4">
+              <h3 class="panel-heading">Permit Status</h3>
+              <div id="permitStatusCard"></div>
+            </div>
+            <div class="panel-card">
+              <h3 class="panel-heading">Violation Notice</h3>
+              <div id="violationNoticeCard"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-4 mt-2">
+          <div class="col-12">
+            <div class="panel-card">
+              <h3 class="panel-heading">Notifications</h3>
+              <div class="row g-3" id="dashboardNotifications"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="directory" class="app-page section-block">
+      <div class="container">
+        <div class="section-title-box">PARKING LOTS DIRECTORY</div>
+        <div class="panel-card mt-3">
+          <div class="row g-3 align-items-end">
+            <div class="col-lg-4">
+              <label class="form-label">Search by Lot or Zone</label>
+              <input id="directorySearch" class="form-control campus-input" placeholder="Search lot name or zone" />
+            </div>
+            <div class="col-lg-3">
+              <label class="form-label">Sort</label>
+              <select id="directorySort" class="form-select campus-input">
+                <option value="availability">By Availability</option>
+                <option value="name">By Name</option>
+                <option value="distance">By Distance</option>
+              </select>
+            </div>
+            <div class="col-lg-5">
+              <label class="form-label">Filter</label>
+              <div class="filter-chip-wrap">
+                <button class="filter-chip active" data-directory-filter="all">All</button>
+                <button class="filter-chip" data-directory-filter="student">Student</button>
+                <button class="filter-chip" data-directory-filter="staff">Staff</button>
+                <button class="filter-chip" data-directory-filter="visitor">Visitor</button>
+                <button class="filter-chip" data-directory-filter="accessible">Accessible</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-4 mt-1" id="directoryGrid"></div>
+      </div>
+    </section>
+
+    <section id="permits" class="app-page section-block soft-section">
+      <div class="container">
+        <div class="section-title-box">PERMIT MANAGEMENT</div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-5">
+            <div class="panel-card h-100">
+              <h3 class="panel-heading">Current Permit</h3>
+              <div id="currentPermitCard"></div>
+              <div class="d-grid gap-2 d-md-flex mt-4">
+                <button id="renewPermitBtn" class="btn btn-campus-lg flex-fill">Renew Permit</button>
+                <button id="cancelPermitBtn" class="btn btn-campus-outline flex-fill">Cancel Permit</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="panel-card">
+              <h3 class="panel-heading">Permit Types</h3>
+              <div class="table-responsive">
+                <table class="table campus-table" id="permitTypesTable">
+                  <thead><tr><th>Permit Type</th><th>Description</th><th>Semester Price</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-7">
+            <div class="panel-card">
+              <h3 class="panel-heading">Apply for New Permit</h3>
+              <form id="permitForm" novalidate>
+                <div class="row g-3">
+                  <div class="col-md-6"><label class="form-label">Permit Type</label><select id="permitTypeInput" class="form-select campus-input" required><option value="">Select</option><option>Student</option><option>Staff</option><option>Visitor</option><option>Accessible</option><option>Motorcycle</option></select></div>
+                  <div class="col-md-6"><label class="form-label">Vehicle Make / Model</label><input id="permitVehicle" class="form-control campus-input" required /></div>
+                  <div class="col-md-6"><label class="form-label">Plate Number</label><input id="permitPlate" class="form-control campus-input" required /></div>
+                  <div class="col-md-6"><label class="form-label">ID Number</label><input id="permitIdNumber" class="form-control campus-input" required /></div>
+                  <div class="col-md-6"><label class="form-label">Start Date</label><input id="permitStartDate" type="date" class="form-control campus-input" required /></div>
+                </div>
+                <button class="btn btn-campus-lg mt-4" type="submit">Submit Permit Application</button>
+              </form>
+              <div id="permitFormMsg" class="mt-3"></div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="panel-card h-100">
+              <h3 class="panel-heading">Application Status</h3>
+              <div class="status-tracker">
+                <div class="tracker-line"></div>
+                <div class="tracker-step active"><span>1</span><small>Submitted</small></div>
+                <div class="tracker-step" id="trackerReview"><span>2</span><small>Under Review</small></div>
+                <div class="tracker-step" id="trackerApproved"><span>3</span><small>Approved</small></div>
+              </div>
+              <p class="tracker-note mt-4" id="permitTrackerText">No pending application yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="auth" class="app-page section-block soft-section">
+      <div class="container">
+        <div class="section-title-box">LOGIN / REGISTER</div>
+        <div class="row justify-content-center mt-3">
+          <div class="col-xl-9">
+            <div class="panel-card">
+              <ul class="nav nav-tabs campus-tabs" id="authTabs" role="tablist">
+                <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#loginTab" type="button">Login</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#registerTab" type="button">Register</button></li>
+              </ul>
+              <div class="tab-content pt-4">
+                <div class="tab-pane fade show active" id="loginTab">
+                  <form id="loginForm" class="row g-3" novalidate>
+                    <div class="col-md-6"><label class="form-label">Email or ID</label><input id="loginIdentifier" class="form-control campus-input" required /></div>
+                    <div class="col-md-6"><label class="form-label">Password</label><input id="loginPassword" type="password" class="form-control campus-input" required /></div>
+                    <div class="col-12 d-flex flex-wrap gap-3 align-items-center"><button class="btn btn-campus-lg" type="submit">Login</button><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a></div>
+                    <div class="col-12" id="loginMsg"></div>
+                  </form>
+                </div>
+                <div class="tab-pane fade" id="registerTab">
+                  <div id="registerSuccess"></div>
+                  <form id="registerForm" class="row g-3" novalidate>
+                    <div class="col-md-6"><label class="form-label">Full Name</label><input id="regName" class="form-control campus-input" required /></div>
+                    <div class="col-md-6" id="regIdWrapper"><label class="form-label">Student / Staff ID</label><input id="regId" class="form-control campus-input" /></div>
+                    <div class="col-md-6"><label class="form-label">Email</label><input id="regEmail" type="email" class="form-control campus-input" required /></div>
+                    <div class="col-md-6"><label class="form-label">Role</label><select id="regRole" class="form-select campus-input" required><option value="">Select role</option><option>Student</option><option>Staff</option><option>Visitor</option></select></div>
+                    <div class="col-md-6"><label class="form-label">Vehicle Plate</label><input id="regPlate" class="form-control campus-input" required /></div>
+                    <div class="col-md-6"><label class="form-label">Permit Type</label><select id="regPermitType" class="form-select campus-input" required><option value="">Select permit</option><option>Student</option><option>Staff</option><option>Visitor</option><option>Accessible</option><option>Motorcycle</option></select></div>
+                    <div class="col-md-6"><label class="form-label">Password</label><input id="regPassword" type="password" class="form-control campus-input" required /></div>
+                    <div class="col-md-6"><label class="form-label">Confirm Password</label><input id="regConfirmPassword" type="password" class="form-control campus-input" required /></div>
+                    <div class="col-12"><button class="btn btn-campus-lg" type="submit">Create Account</button></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="notifications" class="app-page section-block">
+      <div class="container">
+        <div class="section-title-box">NOTIFICATIONS</div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-8">
+            <div class="panel-card">
+              <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+                <h3 class="panel-heading mb-0">Recent Alerts</h3>
+                <div class="d-flex gap-2">
+                  <button id="markAllReadBtn" class="btn btn-campus-outline btn-sm">Mark All as Read</button>
+                  <button id="clearNotificationsBtn" class="btn btn-campus-lg btn-sm">Clear All</button>
+                </div>
+              </div>
+              <div id="notificationsList"></div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="panel-card">
+              <h3 class="panel-heading">Notification Preferences</h3>
+              <div class="form-check form-switch campus-switch mb-3"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">Email Notifications</label></div>
+              <div class="form-check form-switch campus-switch mb-3"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">SMS Notifications</label></div>
+              <div class="form-check form-switch campus-switch"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">In-App Notifications</label></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="help" class="app-page section-block soft-section">
+      <div class="container">
+        <div class="section-title-box">HELP & FAQ</div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-7">
+            <div class="panel-card mb-4">
+              <h3 class="panel-heading">Frequently Asked Questions</h3>
+              <div class="accordion campus-accordion" id="faqAccordion">
+                <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#faq1">How do I reserve a spot?</button></h2><div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body">Go to the Reserve section, choose your destination, date, start time, and duration, then select a lot and confirm your vehicle details.</div></div></div>
+                <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq2">What if I'm late to my reservation?</button></h2><div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Your reservation is held for a grace period shown in your booking details. After that, the system may release the spot.</div></div></div>
+                <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq3">How do I get a permit?</button></h2><div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Use the Permit Management section, complete the permit application form, and track progress through the approval steps.</div></div></div>
+                <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq4">What are the parking hours?</button></h2><div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Hours vary by lot. Open any lot card or map modal to see exact operating hours and overnight restrictions.</div></div></div>
+                <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq5">Can visitors park on campus?</button></h2><div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Yes. Visitor lots and mixed-use lots are marked clearly in the directory, map, and reservation results.</div></div></div>
+                <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq6">How do I report a broken spot sensor?</button></h2><div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Use the Report an Issue form below and choose broken sensor or another issue type to notify parking operations.</div></div></div>
+                <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq7">What happens if I get a violation?</button></h2><div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">You will see the notice in your dashboard and notifications. You can then pay the fine or contact the office for support.</div></div></div>
+                <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq8">How do I cancel a reservation?</button></h2><div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Use the Cancel button in your active or upcoming reservations. The status updates instantly in this demo.</div></div></div>
+              </div>
+            </div>
+            <div class="panel-card mb-4">
+              <h3 class="panel-heading">Contact Parking Office</h3>
+              <form id="contactForm" class="row g-3" novalidate>
+                <div class="col-md-6"><label class="form-label">Name</label><input id="contactName" class="form-control campus-input" required></div>
+                <div class="col-md-6"><label class="form-label">Email</label><input id="contactEmail" type="email" class="form-control campus-input" required></div>
+                <div class="col-12"><label class="form-label">Issue Type</label><select id="contactIssueType" class="form-select campus-input" required><option value="">Select</option><option>Reservation Help</option><option>Permit Question</option><option>Violation Appeal</option><option>General Inquiry</option></select></div>
+                <div class="col-12"><label class="form-label">Message</label><textarea id="contactMessage" class="form-control campus-input" rows="4" required></textarea></div>
+                <div class="col-12"><button class="btn btn-campus-lg" type="submit">Submit Contact Form</button></div>
+                <div class="col-12" id="contactMsg"></div>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="panel-card mb-4">
+              <h3 class="panel-heading">Campus Parking Office Info</h3>
+              <div class="info-list">
+                <div><strong>Address:</strong> 4700 Keele St, North York, ON M3J 1P3</div>
+                <div><strong>Phone:</strong> (416) 555-0199</div>
+                <div><strong>Email:</strong> parking@campuspark.ca</div>
+                <div><strong>Hours:</strong> Mon–Fri, 8:00 AM – 6:00 PM</div>
+              </div>
+            </div>
+            <div class="panel-card">
+              <h3 class="panel-heading">Report an Issue</h3>
+              <form id="issueForm" class="row g-3" novalidate>
+                <div class="col-12"><label class="form-label">Issue Type</label><select id="issueType" class="form-select campus-input" required><option value="">Select</option><option>Spot shown available but full</option><option>Broken sensor</option><option>Hazard</option><option>Gate problem</option></select></div>
+                <div class="col-12"><label class="form-label">Lot Name</label><select id="issueLot" class="form-select campus-input" required></select></div>
+                <div class="col-12"><label class="form-label">Description</label><textarea id="issueDescription" class="form-control campus-input" rows="4" required></textarea></div>
+                <div class="col-12"><button class="btn btn-campus-lg" type="submit">Submit Issue Report</button></div>
+                <div class="col-12" id="issueMsg"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="logo-box"><span>P</span></span>
+            <span class="brand-word">CampusPark</span>
+          </div>
+          <p>Smarter campus parking with faster decisions, fewer loops around full lots, and clearer rules before you arrive.</p>
+        </div>
+        <div class="col-md-4 col-lg-2">
+          <h4>Quick Links</h4>
+          <ul class="footer-links"><li><a href="#home">Home</a></li><li><a href="#map">Map</a></li><li><a href="#reserve">Reserve</a></li><li><a href="#help">Help</a></li></ul>
+        </div>
+        <div class="col-md-4 col-lg-3">
+          <h4>Campus Info</h4>
+          <ul class="footer-links"><li>Parking Office</li><li>Permit Services</li><li>Visitor Parking</li><li>Accessibility Support</li></ul>
+        </div>
+        <div class="col-md-4 col-lg-3">
+          <h4>Contact</h4>
+          <ul class="footer-links"><li>parking@campuspark.ca</li><li>(416) 555-0199</li><li>Mon–Fri 8AM–6PM</li></ul>
+          <div class="social-row"><span><i class="bi bi-instagram"></i></span><span><i class="bi bi-facebook"></i></span><span><i class="bi bi-twitter-x"></i></span></div>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2026 CampusPark. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <div class="modal fade" id="lotModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content campus-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="lotModalTitle">Lot Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="lotModalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content campus-modal">
+        <div class="modal-header">
+          <h5 class="modal-title">Reset Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="forgotPasswordForm">
+            <label class="form-label">Enter your email</label>
+            <input id="forgotEmail" type="email" class="form-control campus-input" required>
+            <button class="btn btn-campus-lg mt-3 w-100" type="submit">Send Reset Link</button>
+            <div id="forgotMsg" class="mt-3"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const lots = [
+      { id: 1, name: 'Lot A', zone: 'North Gate', capacity: 120, available: 68, type: 'student', permits: ['student', 'visitor'], hours: '6:00 AM - 11:00 PM', price: 'Free with permit', accessible: true, ev: 2, reserved: 8, distance: 0.4, buildingMatches: ['Scott Library', 'Founders College'], restrictions: 'No overnight parking', statusOpen: true },
+      { id: 2, name: 'Lot B', zone: 'Central Quad', capacity: 90, available: 19, type: 'staff', permits: ['staff', 'accessible'], hours: '7:00 AM - 10:00 PM', price: '$4/hr', accessible: true, ev: 1, reserved: 10, distance: 0.2, buildingMatches: ['Student Centre', 'Schulich School of Business'], restrictions: 'Staff priority until 5PM', statusOpen: true },
+      { id: 3, name: 'Lot C', zone: 'Founders Rd', capacity: 150, available: 0, type: 'visitor', permits: ['visitor'], hours: '24 Hours', price: '$5/hr', accessible: false, ev: 0, reserved: 0, distance: 0.8, buildingMatches: ['Founders College', 'Scott Library'], restrictions: 'Event overflow on weekends', statusOpen: true },
+      { id: 4, name: 'Lot D', zone: 'Athletics West', capacity: 80, available: 11, type: 'student', permits: ['student', 'motorcycle'], hours: '6:00 AM - 9:00 PM', price: '$3/hr or permit', accessible: false, ev: 0, reserved: 4, distance: 0.6, buildingMatches: ['Tait McKenzie Centre'], restrictions: 'Motorcycles in marked area only', statusOpen: true },
+      { id: 5, name: 'Lot E', zone: 'South Entrance', capacity: 130, available: 54, type: 'visitor', permits: ['visitor', 'student'], hours: '6:00 AM - 11:00 PM', price: '$2/hr', accessible: true, ev: 3, reserved: 12, distance: 1.1, buildingMatches: ['Engineering Building', 'Schulich School of Business'], restrictions: 'Visitor pay required without permit', statusOpen: true },
+      { id: 6, name: 'Lot F', zone: 'East Commons', capacity: 110, available: 87, type: 'staff', permits: ['staff', 'visitor'], hours: '5:30 AM - 10:30 PM', price: 'Free with staff permit', accessible: true, ev: 4, reserved: 6, distance: 1.4, buildingMatches: ['Engineering Building', 'Student Centre'], restrictions: 'Closed during snow operations notice', statusOpen: true },
+      { id: 7, name: 'Lot G', zone: 'Library Loop', capacity: 60, available: 7, type: 'student', permits: ['student', 'accessible'], hours: '24 Hours', price: '$3/hr', accessible: true, ev: 1, reserved: 14, distance: 0.1, buildingMatches: ['Scott Library'], restrictions: 'Reserved bays enforced', statusOpen: true },
+      { id: 8, name: 'Lot H', zone: 'Event Centre', capacity: 140, available: 3, type: 'visitor', permits: ['visitor', 'staff'], hours: '8:00 AM - 12:00 AM', price: '$6/hr', accessible: true, ev: 2, reserved: 20, distance: 1.8, buildingMatches: ['Tait McKenzie Centre', 'Student Centre'], restrictions: 'Peak-demand spikes during events', statusOpen: true }
+    ];
+
+    const permitTypes = [
+      { type: 'Student', description: 'General student permit for academic terms', price: '$180' },
+      { type: 'Staff', description: 'All-day staff access in eligible lots', price: '$240' },
+      { type: 'Visitor', description: 'Short-term visitor access with daily pricing', price: '$90' },
+      { type: 'Accessible', description: 'Priority accessible parking access', price: '$110' },
+      { type: 'Motorcycle', description: 'Motorcycle-only parking zones', price: '$75' }
+    ];
+
+    const dashboardState = {
+      activeReservation: { lot: 'Lot A', spot: 'A-21', minutesRemaining: 96, reference: 'CPK3J7L2', start: '1:30 PM', qrLabel: 'QR Code', cancelled: false },
+      upcoming: [
+        { id: 201, lot: 'Lot E', date: 'Apr 03, 2026', time: '9:00 AM', status: 'Upcoming' },
+        { id: 202, lot: 'Lot G', date: 'Apr 05, 2026', time: '12:00 PM', status: 'Upcoming' },
+        { id: 203, lot: 'Lot B', date: 'Apr 09, 2026', time: '3:30 PM', status: 'Upcoming' }
+      ],
+      past: [
+        { date: 'Mar 29, 2026', lot: 'Lot D', spot: 'D-12', duration: '2hr', status: 'Completed' },
+        { date: 'Mar 26, 2026', lot: 'Lot B', spot: 'B-33', duration: '4hr', status: 'Completed' },
+        { date: 'Mar 23, 2026', lot: 'Lot F', spot: 'F-19', duration: 'All Day', status: 'Completed' },
+        { date: 'Mar 20, 2026', lot: 'Lot E', spot: 'E-08', duration: '1hr', status: 'Completed' },
+        { date: 'Mar 18, 2026', lot: 'Lot A', spot: 'A-15', duration: '2hr', status: 'Cancelled' }
+      ],
+      permit: { type: 'Student Permit', plate: 'SOF-2204', expiry: 'Aug 31, 2026', status: 'Active' },
+      violation: { name: 'Parking in reserved bay', amount: '$35', status: 'Unpaid' }
+    };
+
+    const notifications = [
+      { id: 1, icon: 'bi-alarm', message: 'Reservation reminder: Lot A booking starts in 30 minutes.', timestamp: '10 min ago', read: false },
+      { id: 2, icon: 'bi-exclamation-triangle', message: 'Lot H is nearly full due to tonight’s campus event.', timestamp: '25 min ago', read: false },
+      { id: 3, icon: 'bi-card-checklist', message: 'Permit expiry alert: renew before Aug 31, 2026.', timestamp: '1 hr ago', read: false },
+      { id: 4, icon: 'bi-receipt', message: 'Violation notice issued for plate SOF-2204.', timestamp: '3 hrs ago', read: true },
+      { id: 5, icon: 'bi-map', message: 'Directions ready for your saved lot near Scott Library.', timestamp: 'Yesterday', read: false },
+      { id: 6, icon: 'bi-broadcast', message: 'Live data feed delayed briefly; latest visible timestamp shown on map.', timestamp: 'Yesterday', read: true },
+      { id: 7, icon: 'bi-cone-striped', message: 'Partial closure published for Lot F maintenance zone.', timestamp: '2 days ago', read: false },
+      { id: 8, icon: 'bi-cash-coin', message: 'Visitor parking rate updated for Lot C and Lot H.', timestamp: '3 days ago', read: true }
+    ];
+
+    const users = [
+      { id: 1, name: 'Sofian Kassas', role: 'Student', permit: 'Active', suspended: false },
+      { id: 2, name: 'Yusuf Hamdan', role: 'Student', permit: 'Active', suspended: false },
+      { id: 3, name: 'Ava Wilson', role: 'Staff', permit: 'Expired', suspended: false },
+      { id: 4, name: 'Ethan Garcia', role: 'Visitor', permit: 'Visitor Pass', suspended: false },
+      { id: 5, name: 'Mia Johnson', role: 'Student', permit: 'Pending', suspended: false },
+      { id: 6, name: 'Daniel Park', role: 'Staff', permit: 'Active', suspended: false }
+    ];
+
+    const violations = [
+      { name: 'Emma Lee', plate: 'EML-883', type: 'Overtime parking', fine: '$25', status: 'Unpaid' },
+      { name: 'Liam Martin', plate: 'LMT-410', type: 'Reserved bay misuse', fine: '$40', status: 'Paid' },
+      { name: 'Maya Patel', plate: 'MYP-231', type: 'No permit displayed', fine: '$30', status: 'Unpaid' },
+      { name: 'Ahmed Khan', plate: 'AKH-772', type: 'Blocking lane', fine: '$55', status: 'Paid' },
+      { name: 'Ava Wilson', plate: 'AVW-605', type: 'Expired permit', fine: '$35', status: 'Unpaid' }
+    ];
+
+    const announcements = [
+      { text: 'Reminder: Lot F west edge closes Friday 6 PM for line repainting.' }
+    ];
+
+    let selectedReservationLot = null;
+    let directoryFilter = 'all';
+    let selectedMapLotId = null;
+    let userMapPosition = { x: 150, y: 470, source: 'default' };
+
+    const lotMapPositions = {
+      1: { x: 120, y: 120 },
+      2: { x: 535, y: 125 },
+      3: { x: 118, y: 315 },
+      4: { x: 560, y: 500 },
+      5: { x: 250, y: 520 },
+      6: { x: 835, y: 330 },
+      7: { x: 240, y: 135 },
+      8: { x: 842, y: 500 }
+    };
+
+    function getStatusClass(lot) {
+      if (!lot.statusOpen) return 'map-full';
+      const ratio = lot.available / lot.capacity;
+      if (lot.accessible && lot.available <= 12) return 'map-reserved';
+      if (lot.available === 0) return 'map-full';
+      if (ratio <= 0.2) return 'map-limited';
+      return 'map-available';
+    }
+
+    function getStatusLabel(lot) {
+      if (!lot.statusOpen || lot.available === 0) return 'Full';
+      const ratio = lot.available / lot.capacity;
+      if (lot.accessible && lot.available <= 12) return 'Reserved/Accessible';
+      if (ratio <= 0.2) return 'Limited';
+      return 'Available';
+    }
+
+    function renderHeroStats() {
+      const totalAvailable = lots.reduce((sum, lot) => sum + (lot.statusOpen ? lot.available : 0), 0);
+      document.getElementById('heroAvailableCount').textContent = totalAvailable;
+      document.getElementById('heroLotCount').textContent = lots.length;
+      document.getElementById('heroAccessibleCount').textContent = lots.filter(l => l.accessible).length;
+      document.getElementById('heroEvCount').textContent = lots.reduce((sum, lot) => sum + lot.ev, 0);
+      document.getElementById('heroOpenCount').textContent = lots.filter(l => l.statusOpen && l.available > 0).length;
+      document.getElementById('filledToday').textContent = lots.reduce((sum, lot) => sum + (lot.capacity - lot.available), 0);
+      const avg = Math.round((lots.reduce((sum, lot) => sum + ((lot.capacity - lot.available) / lot.capacity), 0) / lots.length) * 100);
+      document.getElementById('avgOccupancy').textContent = `${avg}%`;
+      document.getElementById('peakHour').textContent = '11:00 AM - 1:00 PM';
+    }
+
+    function renderQuickSearchResults() {
+      const input = document.getElementById('quickSearchInput').value.trim().toLowerCase();
+      const matches = lots
+        .filter(lot => lot.buildingMatches.some(b => b.toLowerCase().includes(input)) || lot.zone.toLowerCase().includes(input) || lot.name.toLowerCase().includes(input))
+        .filter(lot => lot.statusOpen)
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 3);
+      const container = document.getElementById('quickSearchResults');
+      container.innerHTML = '';
+      if (!input) {
+        container.innerHTML = '<div class="col-12"><div class="empty-state">Enter a building or destination to see the nearest lots.</div></div>';
+        return;
+      }
+      if (!matches.length) {
+        container.innerHTML = '<div class="col-12"><div class="empty-state">No direct matches found. Try Library, Engineering, Student Centre, or a lot name.</div></div>';
+        return;
+      }
+      matches.forEach(lot => {
+        container.innerHTML += `<div class="col-md-4"><div class="mini-result-card"><h4>${lot.name}</h4><p>${lot.zone}</p><div class="d-flex justify-content-between"><span>${lot.available} spots</span><span>${lot.distance.toFixed(1)} km</span></div></div></div>`;
+      });
+    }
+
+    function getFilteredMapLots() {
+      const typeFilter = document.getElementById('mapLotTypeFilter').value;
+      const permitFilter = document.getElementById('mapPermitFilter').value;
+      const accessibleOnly = document.getElementById('mapAccessibleOnly').checked;
+      const evOnly = document.getElementById('mapEvOnly').checked;
+      return lots.filter(lot => {
+        if (typeFilter !== 'all' && lot.type !== typeFilter) return false;
+        if (permitFilter !== 'all' && !lot.permits.includes(permitFilter)) return false;
+        if (accessibleOnly && !lot.accessible) return false;
+        if (evOnly && lot.ev === 0) return false;
+        return true;
+      });
+    }
+
+    function formatTravelTime(minutes) {
+      if (minutes < 1) return '< 1 min';
+      if (minutes < 60) return `${Math.round(minutes)} min`;
+      const hours = Math.floor(minutes / 60);
+      const mins = Math.round(minutes % 60);
+      return `${hours} hr ${mins} min`;
+    }
+
+    function routeDistanceKm(start, end) {
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      return Math.sqrt(dx * dx + dy * dy) / 235;
+    }
+
+    function buildRoutePoints(start, end) {
+      const midX = start.x + ((end.x - start.x) * 0.45);
+      const bendY = start.y > 320 ? 320 : 125;
+      return [start, { x: midX, y: start.y }, { x: midX, y: bendY }, { x: end.x, y: bendY }, end];
+    }
+
+    function renderUserLocation() {
+      const layer = document.getElementById('userLocationLayer');
+      layer.innerHTML = `
+        <g class="user-location-group" transform="translate(${userMapPosition.x} ${userMapPosition.y})">
+          <circle class="user-location-pulse" r="22"></circle>
+          <circle class="user-location-dot" r="11"></circle>
+          <text x="0" y="-28">You</text>
+        </g>
+      `;
+    }
+
+    function updateRouteDisplay() {
+      const card = document.getElementById('routeInfoCard');
+      const routeLine = document.getElementById('routeLine');
+      const routeDots = document.getElementById('routeDots');
+      const lot = lots.find(item => item.id === selectedMapLotId);
+      if (!lot || !lotMapPositions[lot.id]) {
+        routeLine.setAttribute('points', '');
+        routeLine.classList.add('d-none');
+        routeDots.innerHTML = '';
+        card.innerHTML = '<div class="route-info-empty">Select a lot on the map to draw a dotted route from your current location.</div>';
+        return;
+      }
+      const routePoints = buildRoutePoints(userMapPosition, lotMapPositions[lot.id]);
+      const pointString = routePoints.map(point => `${point.x},${point.y}`).join(' ');
+      routeLine.setAttribute('points', pointString);
+      routeLine.classList.remove('d-none');
+
+      const totalKm = routeDistanceKm(userMapPosition, lotMapPositions[lot.id]);
+      const drivingMinutes = Math.max(1, (totalKm / 18) * 60);
+      const walkingMinutes = Math.max(1, (totalKm / 5) * 60);
+
+      const dots = [];
+      for (let i = 0; i < routePoints.length - 1; i += 1) {
+        const start = routePoints[i];
+        const end = routePoints[i + 1];
+        const segmentLength = Math.hypot(end.x - start.x, end.y - start.y);
+        const steps = Math.max(3, Math.floor(segmentLength / 34));
+        for (let step = 0; step <= steps; step += 1) {
+          const progress = step / steps;
+          const x = start.x + ((end.x - start.x) * progress);
+          const y = start.y + ((end.y - start.y) * progress);
+          dots.push(`<circle class="route-dot" cx="${x}" cy="${y}" r="4"></circle>`);
+        }
+      }
+      routeDots.innerHTML = dots.join('');
+
+      card.innerHTML = `
+        <div class="route-lot-title">${lot.name} · ${lot.zone}</div>
+        <div class="route-stat-grid">
+          <div><strong>Distance</strong><span>${totalKm.toFixed(2)} km</span></div>
+          <div><strong>Drive Estimate</strong><span>${formatTravelTime(drivingMinutes)}</span></div>
+          <div><strong>Walk Estimate</strong><span>${formatTravelTime(walkingMinutes)}</span></div>
+          <div><strong>Status</strong><span>${getStatusLabel(lot)}</span></div>
+        </div>
+        <div class="route-card-actions d-grid gap-2 mt-3">
+          <button class="btn btn-campus-lg" type="button" onclick="openLotModal(${lot.id})">Open Lot Details</button>
+          <button class="btn btn-campus-outline" type="button" onclick="selectReservationLot(${lot.id}); showPage('reserve');">Reserve This Lot</button>
+        </div>
+      `;
+    }
+
+    function renderMapMarkers(filteredLots) {
+      const layer = document.getElementById('mapMarkersLayer');
+      layer.innerHTML = filteredLots.map(lot => {
+        const position = lotMapPositions[lot.id];
+        const selected = lot.id === selectedMapLotId ? 'selected' : '';
+        return `
+          <g class="lot-marker-group ${selected}" tabindex="0" role="button" aria-label="${lot.name} ${lot.zone}" onclick="selectMapLot(${lot.id})" onkeypress="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectMapLot(${lot.id});}">
+            <circle class="lot-marker ${getStatusClass(lot)}" cx="${position.x}" cy="${position.y}" r="24"></circle>
+            <text class="lot-marker-letter" x="${position.x}" y="${position.y + 5}">${lot.name.replace('Lot ', '')}</text>
+            <text class="lot-marker-label" x="${position.x}" y="${position.y + 42}">${lot.name}</text>
+          </g>
+        `;
+      }).join('');
+    }
+
+    function renderMapLotCards(filteredLots) {
+      const grid = document.getElementById('mapGrid');
+      if (!filteredLots.length) {
+        grid.innerHTML = '<div class="col-12"><div class="empty-state">No lots match the selected map filters.</div></div>';
+        return;
+      }
+      grid.innerHTML = filteredLots.map(lot => `
+        <div class="col-md-6 col-xl-4">
+          <button class="map-lot map-lot-card ${getStatusClass(lot)} ${lot.id === selectedMapLotId ? 'map-lot-active' : ''}" onclick="selectMapLot(${lot.id})">
+            <strong>${lot.name}</strong>
+            <span>${lot.zone}</span>
+            <small>${getStatusLabel(lot)}</small>
+            <div class="lot-mini-count">${lot.available}/${lot.capacity}</div>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function renderMap() {
+      const filtered = getFilteredMapLots();
+      if (selectedMapLotId && !filtered.some(lot => lot.id === selectedMapLotId)) {
+        selectedMapLotId = null;
+      }
+      renderUserLocation();
+      renderMapMarkers(filtered);
+      renderMapLotCards(filtered);
+      updateRouteDisplay();
+      document.getElementById('mapUpdatedAt').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function selectMapLot(id) {
+      selectedMapLotId = id;
+      renderMap();
+    }
+    window.selectMapLot = selectMapLot;
+
+    function setUserMapPosition(x, y, source = 'manual') {
+      userMapPosition = {
+        x: Math.max(70, Math.min(930, x)),
+        y: Math.max(85, Math.min(530, y)),
+        source
+      };
+      renderMap();
+    }
+
+    function syncUserLocationToMap(position) {
+      const baseLat = 43.7735;
+      const baseLng = -79.5005;
+      const latSpan = 0.009;
+      const lngSpan = 0.013;
+      const x = ((position.coords.longitude - baseLng) / lngSpan) * 760 + 120;
+      const y = 500 - (((position.coords.latitude - baseLat) / latSpan) * 350);
+      setUserMapPosition(x, y, 'geolocation');
+    }
+
+    function requestUserLocation() {
+      if (!navigator.geolocation) {
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        syncUserLocationToMap,
+        () => {},
+        { enableHighAccuracy: true, timeout: 7000, maximumAge: 60000 }
+      );
+    }
+
+    function openLotModal(id) {
+      const lot = lots.find(l => l.id === id);
+      document.getElementById('lotModalTitle').textContent = `${lot.name} Details`;
+      document.getElementById('lotModalBody').innerHTML = `
+        <div class="detail-grid">
+          <div><strong>Total Spots</strong><span>${lot.capacity}</span></div>
+          <div><strong>Available</strong><span>${lot.available}</span></div>
+          <div><strong>Lot Type</strong><span>${lot.type}</span></div>
+          <div><strong>Accepted Permits</strong><span>${lot.permits.join(', ')}</span></div>
+          <div><strong>Hours</strong><span>${lot.hours}</span></div>
+          <div><strong>Price</strong><span>${lot.price}</span></div>
+          <div><strong>Restrictions</strong><span>${lot.restrictions}</span></div>
+          <div><strong>EV Charging</strong><span>${lot.ev} station(s)</span></div>
+        </div>
+        <div class="d-grid gap-2 mt-4 d-md-flex">
+          <button class="btn btn-campus-lg flex-fill" onclick="reserveFromLot(${lot.id})">Reserve This Lot</button>
+          <a class="btn btn-campus-outline flex-fill" href="https://www.google.com/maps/search/${encodeURIComponent(lot.zone + ' ' + lot.name)}" target="_blank" rel="noopener">Get Directions</a>
+        </div>
+      `;
+      new bootstrap.Modal(document.getElementById('lotModal')).show();
+    }
+
+    window.openLotModal = openLotModal;
+
+    function renderReservationResults(results = []) {
+      const container = document.getElementById('reservationResults');
+      if (!results.length) {
+        container.innerHTML = '<div class="col-12"><div class="empty-state">Run a search to view reservable lots by distance.</div></div>';
+        return;
+      }
+      container.innerHTML = results.map(lot => `
+        <div class="col-md-6">
+          <div class="result-card">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+              <div>
+                <h4>${lot.name}</h4>
+                <p>${lot.zone}</p>
+              </div>
+              <span class="status-pill ${lot.available === 0 ? 'pill-full' : 'pill-open'}">${lot.available === 0 ? 'Full' : lot.available + ' spots'}</span>
+            </div>
+            <div class="result-meta">
+              <span>${lot.distance.toFixed(1)} km away</span>
+              <span>${lot.permits.join(', ')}</span>
+              <span>${lot.price}</span>
+            </div>
+            <button class="btn btn-campus-lg w-100 mt-3" ${lot.available === 0 ? 'disabled' : ''} onclick="selectReservationLot(${lot.id})">Reserve</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectReservationLot(id) {
+      selectedReservationLot = lots.find(l => l.id === id);
+      updateReservationSummary();
+      document.getElementById('reservationSuccess').classList.add('d-none');
+      showPage('reserve');
+    }
+    window.selectReservationLot = selectReservationLot;
+
+    function reserveFromLot(id) {
+      selectedReservationLot = lots.find(l => l.id === id);
+      updateReservationSummary();
+      bootstrap.Modal.getInstance(document.getElementById('lotModal')).hide();
+      showPage('reserve');
+    }
+    window.reserveFromLot = reserveFromLot;
+
+    function updateReservationSummary() {
+      const panel = document.getElementById('reservationSummary');
+      const name = document.getElementById('resFullName').value || '—';
+      const userId = document.getElementById('resUserId').value || '—';
+      const plate = document.getElementById('resPlate').value || '—';
+      const permit = document.getElementById('resPermitType').value || '—';
+      const destination = document.getElementById('reserveDestination').value || '—';
+      const date = document.getElementById('reserveDate').value || '—';
+      const time = document.getElementById('reserveTime').value || '—';
+      const duration = document.getElementById('reserveDuration').value || '—';
+      panel.innerHTML = `
+        <div class="summary-item"><strong>Selected Lot</strong><span>${selectedReservationLot ? selectedReservationLot.name + ' - ' + selectedReservationLot.zone : 'None selected yet'}</span></div>
+        <div class="summary-item"><strong>Destination</strong><span>${destination}</span></div>
+        <div class="summary-item"><strong>Date / Time</strong><span>${date} ${time !== '—' ? 'at ' + time : ''}</span></div>
+        <div class="summary-item"><strong>Duration</strong><span>${duration}</span></div>
+        <div class="summary-item"><strong>Full Name</strong><span>${name}</span></div>
+        <div class="summary-item"><strong>ID</strong><span>${userId}</span></div>
+        <div class="summary-item"><strong>Plate</strong><span>${plate}</span></div>
+        <div class="summary-item"><strong>Permit Type</strong><span>${permit}</span></div>
+      `;
+    }
+
+    function generateReference() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      return Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+
+    function makeQrHtml() {
+      let boxes = '';
+      for (let i = 0; i < 64; i++) boxes += `<span class="${Math.random() > 0.5 ? 'filled' : ''}"></span>`;
+      return `<div class="qr-grid">${boxes}</div>`;
+    }
+
+    function renderDashboard() {
+      const active = dashboardState.activeReservation;
+      document.getElementById('activeReservationCard').innerHTML = active.cancelled ? `
+        <div class="empty-state">No active reservation. Reserve a new spot to see your live countdown here.</div>` : `
+        <div class="active-card">
+          <div class="d-flex justify-content-between align-items-center mb-3"><strong>${active.lot}</strong><span class="status-pill pill-open">Spot ${active.spot}</span></div>
+          <div class="summary-item"><strong>Reference</strong><span>${active.reference}</span></div>
+          <div class="summary-item"><strong>Start Time</strong><span>${active.start}</span></div>
+          <div class="summary-item"><strong>Time Remaining</strong><span id="countdownText">${formatCountdown(active.minutesRemaining * 60)}</span></div>
+          ${makeQrHtml()}
+          <button class="btn btn-campus-lg w-100 mt-3" id="cancelActiveReservation">Cancel Reservation</button>
+        </div>`;
+      document.getElementById('upcomingReservations').innerHTML = dashboardState.upcoming.map(item => `
+        <div class="list-row d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div><strong>${item.lot}</strong><div class="small-text">${item.date} · ${item.time}</div></div>
+          <div class="d-flex gap-2"><button class="btn btn-campus-outline btn-sm" onclick="modifyUpcoming(${item.id})">Modify</button><button class="btn btn-campus-lg btn-sm" onclick="cancelUpcoming(${item.id})">Cancel</button></div>
+        </div>
+      `).join('');
+      const pastBody = document.querySelector('#pastReservationsTable tbody');
+      pastBody.innerHTML = dashboardState.past.map(item => `<tr><td>${item.date}</td><td>${item.lot}</td><td>${item.spot}</td><td>${item.duration}</td><td>${item.status}</td></tr>`).join('');
+      document.getElementById('permitStatusCard').innerHTML = `
+        <div class="summary-item"><strong>Permit</strong><span>${dashboardState.permit.type}</span></div>
+        <div class="summary-item"><strong>Vehicle Plate</strong><span>${dashboardState.permit.plate}</span></div>
+        <div class="summary-item"><strong>Expiry Date</strong><span>${dashboardState.permit.expiry}</span></div>
+        <div class="summary-item"><strong>Status</strong><span class="status-pill ${dashboardState.permit.status === 'Active' ? 'pill-open' : 'pill-full'}">${dashboardState.permit.status}</span></div>
+      `;
+      document.getElementById('violationNoticeCard').innerHTML = `
+        <div class="summary-item"><strong>Notice</strong><span>${dashboardState.violation.name}</span></div>
+        <div class="summary-item"><strong>Fine</strong><span>${dashboardState.violation.amount}</span></div>
+        <div class="summary-item"><strong>Status</strong><span class="status-pill ${dashboardState.violation.status === 'Paid' ? 'pill-open' : 'pill-full'}">${dashboardState.violation.status}</span></div>
+        <button class="btn btn-campus-lg w-100 mt-3" id="payFineBtn">Pay Fine</button>
+      `;
+      document.getElementById('dashboardNotifications').innerHTML = notifications.slice(0,4).map(n => `
+        <div class="col-md-6"><div class="notification-card ${n.read ? 'read' : ''}"><div class="d-flex justify-content-between gap-3"><div><i class="bi ${n.icon}"></i> ${n.message}</div><button class="btn btn-campus-outline btn-sm" onclick="markNotificationRead(${n.id})">Mark as Read</button></div></div></div>`).join('');
+
+      const cancelBtn = document.getElementById('cancelActiveReservation');
+      if (cancelBtn) cancelBtn.addEventListener('click', () => { dashboardState.activeReservation.cancelled = true; renderDashboard(); });
+      const fineBtn = document.getElementById('payFineBtn');
+      if (fineBtn) fineBtn.addEventListener('click', () => { dashboardState.violation.status = 'Paid'; renderDashboard(); });
+    }
+
+    function formatCountdown(totalSeconds) {
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function renderDirectory() {
+      let filtered = [...lots];
+      const query = document.getElementById('directorySearch').value.trim().toLowerCase();
+      const sort = document.getElementById('directorySort').value;
+      if (query) filtered = filtered.filter(l => l.name.toLowerCase().includes(query) || l.zone.toLowerCase().includes(query));
+      if (directoryFilter !== 'all') {
+        filtered = filtered.filter(l => directoryFilter === 'accessible' ? l.accessible : l.type === directoryFilter || l.permits.includes(directoryFilter));
+      }
+      if (sort === 'name') filtered.sort((a,b) => a.name.localeCompare(b.name));
+      if (sort === 'distance') filtered.sort((a,b) => a.distance - b.distance);
+      if (sort === 'availability') filtered.sort((a,b) => b.available - a.available);
+      const grid = document.getElementById('directoryGrid');
+      grid.innerHTML = filtered.map(lot => {
+        const pct = Math.round((lot.available / lot.capacity) * 100);
+        return `
+          <div class="col-md-6 col-xl-4">
+            <div class="directory-card">
+              <div class="d-flex justify-content-between gap-3 align-items-start">
+                <div><h3>${lot.name}</h3><p>${lot.zone}</p></div>
+                ${lot.accessible ? '<span class="icon-badge"><i class="bi bi-universal-access"></i></span>' : ''}
+              </div>
+              <div class="directory-meta">Capacity ${lot.capacity} · ${lot.hours}</div>
+              <div class="progress campus-progress mt-3"><div class="progress-bar" style="width:${pct}%"></div></div>
+              <div class="directory-meta mt-2">${lot.available} spots available · Permits: ${lot.permits.join(', ')} ${lot.ev ? '· EV ' + lot.ev : ''}</div>
+              <div class="d-grid gap-2 d-md-flex mt-3">
+                <button class="btn btn-campus-outline flex-fill" onclick="openLotModal(${lot.id})">View Details</button>
+                <button class="btn btn-campus-lg flex-fill" onclick="selectReservationLot(${lot.id})">Reserve</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('') || '<div class="col-12"><div class="empty-state">No lots matched your current search and filter settings.</div></div>';
+    }
+
+    function renderPermits() {
+      document.getElementById('currentPermitCard').innerHTML = `
+        <div class="summary-item"><strong>Permit Holder</strong><span>Sofian Kassas</span></div>
+        <div class="summary-item"><strong>Permit Type</strong><span>${dashboardState.permit.type}</span></div>
+        <div class="summary-item"><strong>Assigned Vehicle</strong><span>Toyota Corolla · ${dashboardState.permit.plate}</span></div>
+        <div class="summary-item"><strong>Valid Until</strong><span>${dashboardState.permit.expiry}</span></div>
+        <div class="summary-item"><strong>Status</strong><span class="status-pill pill-open">${dashboardState.permit.status}</span></div>
+      `;
+      document.querySelector('#permitTypesTable tbody').innerHTML = permitTypes.map(p => `<tr><td>${p.type}</td><td>${p.description}</td><td>${p.price}</td></tr>`).join('');
+    }
+
+
+    function renderNotifications() {
+      const count = notifications.filter(n => !n.read).length;
+      document.getElementById('navUnreadCount').textContent = count;
+      document.getElementById('notificationsList').innerHTML = notifications.map(n => `
+        <div class="notification-card ${n.read ? 'read' : ''}">
+          <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+            <div><div class="fw-semibold"><i class="bi ${n.icon}"></i> ${n.message}</div><div class="small-text mt-1">${n.timestamp}</div></div>
+            <button class="btn btn-campus-outline btn-sm" onclick="markNotificationRead(${n.id})">Mark as Read</button>
+          </div>
+        </div>
+      `).join('') || '<div class="empty-state">All notifications are cleared.</div>';
+    }
+
+    function populateIssueLots() {
+      document.getElementById('issueLot').innerHTML = '<option value="">Select lot</option>' + lots.map(l => `<option>${l.name}</option>`).join('');
+    }
+
+    function showMsg(el, text, success = true) {
+      el.innerHTML = `<div class="alert ${success ? 'alert-success' : 'alert-danger'} mb-0">${text}</div>`;
+    }
+
+    function validateRequired(form) {
+      let valid = true;
+      form.querySelectorAll('[required]').forEach(input => {
+        if (!input.value.trim()) {
+          input.classList.add('is-invalid');
+          valid = false;
+        } else {
+          input.classList.remove('is-invalid');
+        }
+      });
+      return valid;
+    }
+
+    window.markNotificationRead = function(id) {
+      const n = notifications.find(item => item.id === id);
+      if (n) n.read = true;
+      renderNotifications();
+      renderDashboard();
+    };
+
+    window.modifyUpcoming = function(id) {
+      const item = dashboardState.upcoming.find(r => r.id === id);
+      if (item) item.time = 'Updated to 4:00 PM';
+      renderDashboard();
+    };
+
+    window.cancelUpcoming = function(id) {
+      dashboardState.upcoming = dashboardState.upcoming.filter(r => r.id !== id);
+      renderDashboard();
+    };
+
+
+    document.getElementById('quickSearchBtn').addEventListener('click', renderQuickSearchResults);
+    document.getElementById('quickSearchInput').addEventListener('input', renderQuickSearchResults);
+
+    ['mapLotTypeFilter', 'mapPermitFilter', 'mapAccessibleOnly', 'mapEvOnly'].forEach(id => {
+      document.getElementById(id).addEventListener('change', renderMap);
+    });
+
+    document.getElementById('locateMeBtn').addEventListener('click', requestUserLocation);
+    document.getElementById('clearRouteBtn').addEventListener('click', () => {
+      selectedMapLotId = null;
+      renderMap();
+    });
+    document.getElementById('campusMapSvg').addEventListener('click', event => {
+      if (event.target.closest('.lot-marker-group')) return;
+      const svg = event.currentTarget;
+      const point = svg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      const transformed = point.matrixTransform(svg.getScreenCTM().inverse());
+      setUserMapPosition(transformed.x, transformed.y, 'manual');
+    });
+
+    document.getElementById('reservationSearchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateRequired(e.target)) return;
+      const destination = document.getElementById('reserveDestination').value;
+      const results = [...lots]
+        .filter(lot => lot.buildingMatches.includes(destination))
+        .sort((a, b) => a.distance - b.distance);
+      renderReservationResults(results);
+      updateReservationSummary();
+    });
+
+    ['resFullName','resUserId','resPlate','resPermitType','reserveDestination','reserveDate','reserveTime','reserveDuration'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateReservationSummary);
+      document.getElementById(id).addEventListener('change', updateReservationSummary);
+    });
+
+    document.getElementById('confirmReservationForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const form = e.target;
+      if (!selectedReservationLot) {
+        return showMsg(document.getElementById('reservationSuccess'), 'Please select a lot from the search results or map first.', false);
+      }
+      if (!validateRequired(form)) return;
+      const ref = generateReference();
+      const successBox = document.getElementById('reservationSuccess');
+      successBox.classList.remove('d-none');
+      successBox.innerHTML = `
+        <h4>Reservation Confirmed</h4>
+        <p>Your booking for <strong>${selectedReservationLot.name}</strong> is confirmed.</p>
+        <div class="summary-item"><strong>Reference</strong><span>${ref}</span></div>
+        <div class="summary-item"><strong>Destination</strong><span>${document.getElementById('reserveDestination').value}</span></div>
+        <div class="summary-item"><strong>Date</strong><span>${document.getElementById('reserveDate').value} at ${document.getElementById('reserveTime').value}</span></div>
+        ${makeQrHtml()}
+      `;
+      dashboardState.activeReservation = { lot: selectedReservationLot.name, spot: selectedReservationLot.name.replace('Lot ', '') + '-' + (10 + Math.floor(Math.random() * 40)), minutesRemaining: 120, reference: ref, start: document.getElementById('reserveTime').value, qrLabel: 'QR Code', cancelled: false };
+      selectedReservationLot.available = Math.max(0, selectedReservationLot.available - 1);
+      renderDashboard(); renderMap(); renderHeroStats(); renderDirectory();
+    });
+
+    document.getElementById('clearReservationSelection').addEventListener('click', () => {
+      selectedReservationLot = null;
+      document.getElementById('confirmReservationForm').reset();
+      document.getElementById('reservationSuccess').classList.add('d-none');
+      updateReservationSummary();
+    });
+
+    document.getElementById('directorySearch').addEventListener('input', renderDirectory);
+    document.getElementById('directorySort').addEventListener('change', renderDirectory);
+    document.querySelectorAll('[data-directory-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-directory-filter]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        directoryFilter = btn.dataset.directoryFilter;
+        renderDirectory();
+      });
+    });
+
+    document.getElementById('permitForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateRequired(e.target)) return;
+      showMsg(document.getElementById('permitFormMsg'), 'Application Submitted — Pending Approval');
+      document.getElementById('trackerReview').classList.add('active');
+      document.getElementById('trackerApproved').classList.remove('active');
+      document.getElementById('permitTrackerText').textContent = 'Application submitted successfully and moved to Under Review.';
+    });
+
+    document.getElementById('renewPermitBtn').addEventListener('click', () => {
+      dashboardState.permit.expiry = 'Dec 31, 2026';
+      renderPermits(); renderDashboard();
+    });
+    document.getElementById('cancelPermitBtn').addEventListener('click', () => {
+      dashboardState.permit.status = 'Expired';
+      renderPermits(); renderDashboard();
+    });
+
+
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateRequired(e.target)) return;
+      showMsg(document.getElementById('loginMsg'), 'Login successful. Demo user session started.');
+    });
+
+    document.getElementById('regRole').addEventListener('change', e => {
+      const wrapper = document.getElementById('regIdWrapper');
+      const regId = document.getElementById('regId');
+      if (e.target.value === 'Visitor') {
+        wrapper.classList.add('d-none');
+        regId.removeAttribute('required');
+      } else {
+        wrapper.classList.remove('d-none');
+        regId.setAttribute('required', 'required');
+      }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const form = e.target;
+      if (!validateRequired(form)) return;
+      const role = document.getElementById('regRole').value;
+      const idVal = document.getElementById('regId').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+      if (role !== 'Visitor' && !/^\d+$/.test(idVal)) {
+        return showMsg(document.getElementById('registerSuccess'), 'Student / Staff ID must be numeric.', false);
+      }
+      if (password !== confirmPassword) {
+        return showMsg(document.getElementById('registerSuccess'), 'Passwords do not match.', false);
+      }
+      form.reset();
+      document.getElementById('regIdWrapper').classList.remove('d-none');
+      showMsg(document.getElementById('registerSuccess'), 'Account created! Please log in.');
+    });
+
+    document.getElementById('forgotPasswordForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      if (!email) return;
+      showMsg(document.getElementById('forgotMsg'), `Password reset link sent to ${email}.`);
+    });
+
+    document.getElementById('markAllReadBtn').addEventListener('click', () => {
+      notifications.forEach(n => n.read = true); renderNotifications(); renderDashboard();
+    });
+    document.getElementById('clearNotificationsBtn').addEventListener('click', () => {
+      notifications.splice(0, notifications.length); renderNotifications(); renderDashboard();
+    });
+
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateRequired(e.target)) return;
+      showMsg(document.getElementById('contactMsg'), 'Your message was sent successfully. The parking office will follow up shortly.');
+      e.target.reset();
+    });
+
+    document.getElementById('issueForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateRequired(e.target)) return;
+      showMsg(document.getElementById('issueMsg'), 'Issue report submitted successfully. Thank you for helping improve data accuracy.');
+      e.target.reset();
+    });
+
+    const pageIds = ['home', 'map', 'reserve', 'directory', 'permits', 'dashboard', 'auth', 'notifications', 'help'];
+
+    function showPage(pageId, pushHash = true) {
+      const targetId = pageIds.includes(pageId) ? pageId : 'home';
+      document.querySelectorAll('.app-page').forEach(section => {
+        section.classList.toggle('active-page', section.id === targetId);
+      });
+      document.querySelectorAll('.navbar .nav-link, .footer-links a, .navbar-brand, a.btn-campus-pill, .btn-campus-lg[href^="#"], .btn-campus-outline[href^="#"]').forEach(link => {
+        const href = link.getAttribute('href');
+        const isActive = href === `#${targetId}`;
+        if (link.classList.contains('nav-link')) {
+          link.classList.toggle('active-nav', isActive);
+        }
+        if (link.classList.contains('btn-campus-pill')) {
+          link.classList.toggle('active-pill', isActive);
+        }
+      });
+      if (pushHash) history.replaceState(null, '', `#${targetId}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const nav = document.getElementById('mainNav');
+      if (nav.classList.contains('show')) new bootstrap.Collapse(nav).hide();
+    }
+    window.showPage = showPage;
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
+        const targetId = href.slice(1);
+        if (pageIds.includes(targetId)) {
+          e.preventDefault();
+          showPage(targetId);
+        }
+      });
+    });
+
+    window.addEventListener('hashchange', () => {
+      const targetId = (location.hash || '#home').slice(1);
+      showPage(targetId, false);
+    });
+
+    setInterval(() => {
+      const openLots = lots.filter(l => l.statusOpen);
+      const lot = openLots[Math.floor(Math.random() * openLots.length)];
+      const delta = Math.floor(Math.random() * 3) + 1;
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      lot.available = Math.max(0, Math.min(lot.capacity, lot.available + (delta * direction)));
+      showPage((location.hash || '#home').slice(1), false);
+
+    renderHeroStats(); renderMap(); renderDirectory();
+    }, 60000);
+
+    setInterval(() => {
+      if (!dashboardState.activeReservation.cancelled && dashboardState.activeReservation.minutesRemaining > 0) {
+        dashboardState.activeReservation.minutesRemaining -= 1/60;
+        const el = document.getElementById('countdownText');
+        if (el) el.textContent = formatCountdown(Math.max(0, Math.floor(dashboardState.activeReservation.minutesRemaining * 60)));
+      }
+    }, 1000);
+
+    setInterval(renderMap, 30000);
+
+    requestUserLocation();
+    renderHeroStats();
+    renderQuickSearchResults();
+    renderMap();
+    renderReservationResults();
+    updateReservationSummary();
+    renderDashboard();
+    renderDirectory();
+    renderPermits();
+    renderNotifications();
+    populateIssueLots();
+    showPage((location.hash || '#home').slice(1), false);
+  </script>
+</body>
+</html>
